@@ -16,7 +16,7 @@ const connection = mysql.createConnection({
   database: "company_db"
 });
 
-cconnection.connect(function(err) {
+connection.connect(function(err) {
   if (err) throw err;
   runSearch();
 });
@@ -69,12 +69,12 @@ const runSearch = () =>{
     });
 }
 
-const EmplopyeeSearch = () => {
-  const query = `SELECT e.emp_id, e.first_name, e.last_name, e.manager_id,
-    r.title, r.salary, d.department_name
+const employeeSearch = () => {
+  const query = `SELECT e.id, e.first_name, e.last_name, e.manager_id,
+    r.title, r.salary, d.name
     FROM ((employee e
-    INNER JOIN roles r ON e.role_id = r.role_id)
-    INNER JOIN department d ON d.department_id = r.department_id)`;
+    INNER JOIN role r ON e.role_id = r.id)
+    INNER JOIN department d ON d.id = r.department_id)`;
   const dbquery = connection.query(query, (err, res) => {
     if (err) throw err;
 
@@ -84,7 +84,7 @@ const EmplopyeeSearch = () => {
 };
 
 const roleSearch = () => {
-  const query = `SELECT * FROM roles`;
+  const query = `SELECT * FROM role`;
   const dbquery = connection.query(query, (err, res) => {
     if (err) throw err;
 
@@ -103,7 +103,7 @@ const deptSearch = () => {
 
   const addEmployee = () => {
  
-    connection.query("SELECT * FROM roles", function (err, roles) {
+    connection.query("SELECT * FROM role", function (err, roles) {
         if (err) throw err;
        connection.query("SELECT * FROM employee", function (err, employees) {
         inquirer.prompt([
@@ -195,13 +195,13 @@ const addRole = () => {
       },
     ])
     .then(function (response) {
-      const query = `SELECT department_id FROM department WHERE department_name = '${response.department}'`;
+      const query = `SELECT d.id FROM department WHERE name = '${response.department}'`;
       const dbquery = connection.query(query, (err, res) => {
         if (err) throw err;
 
-        console.log(response[0].department_id);
+        console.log(response[0].id);
 
-        const query2 = `INSERT INTO roles (title, salary, department_id) VALUES ("${response.role}", ${response.salary}, ${response[0].department_id})`;
+        const query2 = `INSERT INTO role (title, salary, department_id) VALUES ("${response.role}", ${response.salary}, ${response[0].department_id})`;
         const dbquery2 = connection.query(query2, (err, res) => {
           if (err) throw err;
 
@@ -268,7 +268,6 @@ const updateEmployeeRole = () => {
                   console.table("Role updated");
                   runSearch()
               });
-
           })
       })
   })

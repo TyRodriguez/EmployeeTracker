@@ -1,8 +1,8 @@
-DROP DATABASE IF EXISTS employee_TrackerDB;
+DROP DATABASE IF EXISTS company_db;
 -- Drops the database
-CREATE DATABASE employee_TrackerDB;
+CREATE DATABASE company_db;
 -- creates the database
-USE employee_TrackerDB;
+USE company_db;
 create table department(
     id integer not null auto_increment,
     name varchar(30),
@@ -34,4 +34,4 @@ create table employee(
     foreign key (manager_id) references employee(id)
 );
 
-use employee_TrackerDB;
+use company_db;
